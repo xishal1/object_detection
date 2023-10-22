@@ -42,7 +42,7 @@ while True:
             cls = int(box.cls[0])
             currentClass = classNames[cls]
 
-            if currentClass == "car" or currentClass == "truck" or currentClass == "bus" or currentClass == "motorbike" and conf>0.3
+            if currentClass == "car" or currentClass == "truck" or currentClass == "bus" or currentClass == "motorbike" and conf>0.3:
                 cvzone.cornerRect(img,(x1, y1, w, h), l=8,t=3)
                 cvzone.putTextRect(img, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=0.6, thickness=1, offset=3)
 
