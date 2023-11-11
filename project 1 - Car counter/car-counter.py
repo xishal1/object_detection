@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import cv2
 import cvzone
 import math
+from sort import *
 
 # for web cam
 # cap = cv2.VideoCapture(0)
@@ -25,9 +26,16 @@ classNames = ["person", "bicycle", "car", "motorbike", "aeroplane", "bus", "trai
               "teddy bear", "hair drier", "toothbrush"
               ]
 
+mask = cv2.imread("mask.png")
+
+# Tracking part
+tracker = Sort(max_age=20, min_hits=3,iou_threshold=0.3)
+
 while True:
     success, img = cap.read()
-    results = model(img, stream=True)
+    imgRegion = cv2.bitwise_and(img, mask)
+
+    results = model(imgRegion, stream=True)
     for r in results:
         boxes = r.boxes
         for box in boxes:
@@ -46,5 +54,8 @@ while True:
                 cvzone.cornerRect(img,(x1, y1, w, h), l=8,t=3)
                 cvzone.putTextRect(img, f'{classNames[cls]} {conf}', (max(0, x1), max(35, y1)), scale=0.6, thickness=1, offset=3)
 
+
+    tracker.update(detections)
     cv2.imshow("Image", img)
+    cv2.imshow("ImageRegion", imgRegion)
     cv2.waitKey(1)
